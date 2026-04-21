@@ -106,6 +106,23 @@
                     Pawns
                 </button>
             </div>
+
+            <!-- Paginación Panel Derecho -->
+            <div class="flex items-center gap-3 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm">
+                <button onclick="window.prevPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <span id="page-indicator" class="text-xs font-bold text-slate-300 font-mono w-10 text-center">1/1</span>
+                <button onclick="window.nextPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+                </button>
+            </div>
+
+            <!-- Botón Ocultar/Mostrar UI -->
+            <button onclick="window.toggleUI()" id="top-btn-toggle" class="px-3 py-1.5 ml-2 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                Ocultar UI
+            </button>
         </div>
 
         <!-- CONTENIDO BUSCADOR HORIZONTAL (Oculto por defecto, visible al tipear) -->
@@ -128,12 +145,10 @@
     </header>
 
     <!-- ÁREA PRINCIPAL XATFRAME (100% Bloqueada para clics) -->
-    <!-- Inicia exactamente después de los 91px del header. -->
     <main class="absolute top-[91px] left-0 w-[1303px] h-[487px] pointer-events-none">
 
         <!-- PANEL IZQUIERDO (CUADRO 1: DETALLES) -->
-        <!-- Posición: +30px verticalmente, 40px margen izquierdo. No altera interno. -->
-        <aside class="absolute top-[30px] left-[40px] w-[229px] h-[408px] overflow-hidden pointer-events-none">
+        <aside id="left-panel" class="absolute top-[30px] left-[40px] w-[229px] h-[408px] overflow-hidden pointer-events-none transition-opacity duration-300">
             <!-- Escala CSS Exacta que ya mantenías: Ancho interno 380px escalado al 60.2% -> 229px -->
             <div style="width: 380px; transform: scale(0.602); transform-origin: top left; position: absolute; top: 0; left: 0;">
                 
@@ -198,14 +213,13 @@
         </aside>
 
         <!-- ZONA CENTRAL XAT (CUADRO 2: CHAT) -->
-        <!-- Centrada dinámicamente y con top:0 para mantener el offset relativo del chat box -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[726px] h-[487px] shrink-0 pointer-events-none">
-            <!-- Esqueleto de Carga visible desde el centro absoluto del contenedor total -->
+            <!-- Esqueleto de Carga -->
             <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center -translate-y-12 animate-pulse-slow">
                 <div class="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
                 <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase bg-slate-900/50 px-6 py-2 rounded-full backdrop-blur-sm">Cargando catálogo...</p>
             </div>
-            <!-- Error visible central -->
+            <!-- Error -->
             <div id="error" class="absolute inset-0 flex-col items-center justify-center -translate-y-12 hidden">
                 <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto backdrop-blur-sm text-center">
                     <svg class="w-16 h-16 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -218,30 +232,28 @@
         </div>
 
         <!-- PANEL DERECHO (CUADRO 3: SMILIES/PAWNS) -->
-        <!-- Posición: +30px verticalmente, anclado a la derecha sin romper grid de xat -->
-        <aside class="absolute top-[30px] right-[0px] w-[272px] h-[473px] overflow-hidden pointer-events-none">
+        <aside id="right-panel" class="absolute top-[30px] right-[0px] w-[272px] h-[473px] overflow-hidden pointer-events-none transition-opacity duration-300">
             
-            <div id="content" class="hidden w-full h-full">
+            <div id="content" class="hidden w-full h-full" style="width: 340px; transform: scale(0.8); transform-origin: top left; position: absolute; top: 0; left: 0;">
                 
                 <!-- Sección de Smilies -->
-                <section id="section-smilies" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6 w-full h-full flex flex-col">
-                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3 shrink-0">
-                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(smile)_20" alt="Smile icon" class="h-7 w-7 object-contain"> Smilies
+                <section id="section-smilies" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-5 w-full h-[590px] flex flex-col">
+                    <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-3 flex items-center gap-3 shrink-0">
+                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(smile)_40" alt="Smile icon" class="h-6 w-6 object-contain" style="image-rendering: auto;"> Smilies
                     </h2>
-                    <!-- Flex container interno para aplicar escala matemática -->
-                    <div class="flex-1 w-full overflow-hidden flex justify-center">
-                        <div id="smileys-grid"></div>
+                    <div class="flex-1 w-full overflow-hidden">
+                        <!-- Grid fija para 6 elementos gigantes y legibles -->
+                        <div id="smileys-grid" class="grid grid-cols-2 gap-3 content-start w-full"></div>
                     </div>
                 </section>
 
                 <!-- Sección de Pawns -->
-                <section id="section-pawns" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6 w-full h-full hidden flex-col">
-                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3 shrink-0">
-                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(p1pwn)_80" alt="Pawn icon" class="h-11 w-11 object-contain"> Pawns
+                <section id="section-pawns" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-5 w-full h-[590px] hidden flex-col">
+                    <h2 class="text-xl font-bold text-white mb-4 border-b border-slate-800 pb-3 flex items-center gap-3 shrink-0">
+                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(p1pwn)_40" alt="Pawn icon" class="h-6 w-6 object-contain" style="image-rendering: auto;"> Pawns
                     </h2>
-                    <!-- Flex container interno para aplicar escala matemática -->
-                    <div class="flex-1 w-full overflow-hidden flex justify-center">
-                        <div id="pawns-grid"></div>
+                    <div class="flex-1 w-full overflow-hidden">
+                        <div id="pawns-grid" class="grid grid-cols-2 gap-3 content-start w-full"></div>
                     </div>
                 </section>
 
@@ -254,11 +266,37 @@
   <script>
     // ESTADOS GLOBALES DE NAVEGACIÓN Y BÚSQUEDA
     window.currentRightView = 'smilies';
+    window.currentPage = 0;
+    const ITEMS_PER_PAGE = 6; // Exacto para 2 columnas x 3 filas maximizadas
     window.apiSearchData = [];
+    window.uiVisible = true;
 
-    // --- SISTEMA DE CONTROL DE VISTAS (Panel Derecho) ---
+    // --- TOGGLE UI COMPLETA ---
+    window.toggleUI = function() {
+        window.uiVisible = !window.uiVisible;
+        const lp = document.getElementById('left-panel');
+        const rp = document.getElementById('right-panel');
+        const btn = document.getElementById('top-btn-toggle');
+        
+        if (window.uiVisible) {
+            lp.classList.remove('opacity-0');
+            rp.classList.remove('opacity-0');
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg> Ocultar UI`;
+            btn.classList.replace('bg-slate-700', 'bg-slate-800');
+            btn.classList.replace('text-white', 'text-slate-300');
+        } else {
+            lp.classList.add('opacity-0');
+            rp.classList.add('opacity-0');
+            btn.innerHTML = `<svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.88 9.88l-3.29-3.29m7.532 7.532l3.29 3.29M3 3l3.59 3.59m0 0A9.953 9.953 0 0112 5c4.478 0 8.268 2.943 9.543 7a10.025 10.025 0 01-4.132 5.411m0 0L21 21" /></svg> Mostrar UI`;
+            btn.classList.replace('bg-slate-800', 'bg-slate-700');
+            btn.classList.replace('text-slate-300', 'text-white');
+        }
+    };
+
+    // --- SISTEMA DE CONTROL DE VISTAS ---
     window.switchRightView = function(view) {
         window.currentRightView = view;
+        window.currentPage = 0; // Resetear página al cambiar tab
         
         const secSmilies = document.getElementById('section-smilies');
         const secPawns = document.getElementById('section-pawns');
@@ -296,63 +334,51 @@
             btnS.classList.replace('text-white', 'text-slate-400');
             btnS.classList.add('opacity-80', 'hover:bg-slate-800');
         }
+        updatePaginationUI();
     };
 
-    // --- NUEVO SISTEMA DE CÁLCULO DE ESCALA DINÁMICA (Sin scroll, Visibilidad 100%) ---
-    function applyDynamicScale(gridId) {
+    // --- SISTEMA DE PAGINACIÓN ---
+    function updatePaginationUI() {
+        const gridId = window.currentRightView === 'smilies' ? 'smileys-grid' : 'pawns-grid';
         const grid = document.getElementById(gridId);
-        const items = grid.children.length;
-        if (items === 0) return;
-
-        // Limpieza de estilos por si se recalcula
-        grid.style.transform = '';
-        grid.style.width = '';
-        grid.style.height = '';
-        grid.style.gridTemplateColumns = '';
+        const cards = grid.children;
+        const totalItems = cards.length;
+        const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
         
-        // Área disponible en el Panel Derecho 272x473
-        // Padding es 24px cada lado (w=224px). Header ~60px + margin (h=~365px).
-        const targetW = 272 - 48; 
-        const targetH = 473 - 100; 
-
-        // Medidas base de la carta renderizada (aproximadas basadas en Tailwind usado)
-        const cardW = 150; 
-        const cardH = 180; 
-        const gap = 16;
-
-        let bestScale = 0;
-        let bestCols = 1;
-        let bestRows = 1;
-
-        // Iterar posibles columnas para encontrar la escala matemática óptima
-        for (let cols = 1; cols <= items; cols++) {
-            const rows = Math.ceil(items / cols);
-            const w = cols * cardW + (cols - 1) * gap;
-            const h = rows * cardH + (rows - 1) * gap;
-            
-            const scale = Math.min(targetW / w, targetH / h);
-            if (scale > bestScale) {
-                bestScale = scale;
-                bestCols = cols;
-                bestRows = rows;
+        if (window.currentPage >= totalPages) window.currentPage = totalPages - 1;
+        
+        const start = window.currentPage * ITEMS_PER_PAGE;
+        const end = start + ITEMS_PER_PAGE;
+        
+        for (let i = 0; i < cards.length; i++) {
+            if (i >= start && i < end) {
+                cards[i].style.display = 'flex';
+            } else {
+                cards[i].style.display = 'none';
             }
         }
-
-        // Aplicar la cuadrícula exacta y forzar su envolvente para escalarla
-        const innerW = bestCols * cardW + (bestCols - 1) * gap;
-        const innerH = bestRows * cardH + (bestRows - 1) * gap;
-
-        grid.style.display = 'grid';
-        grid.style.gridTemplateColumns = `repeat(${bestCols}, ${cardW}px)`;
-        grid.style.gap = `${gap}px`;
-        grid.style.width = `${innerW}px`;
-        grid.style.height = `${innerH}px`;
-
-        grid.style.transform = `scale(${bestScale})`;
-        grid.style.transformOrigin = "top center";
+        
+        document.getElementById('page-indicator').textContent = `${window.currentPage + 1}/${totalPages}`;
     }
 
-    // --- NUEVO SISTEMA DE BÚSQUEDA EN TIEMPO REAL DESDE EL CONTROLADOR (Sin Dropdown) ---
+    window.nextPage = function() {
+        const gridId = window.currentRightView === 'smilies' ? 'smileys-grid' : 'pawns-grid';
+        const totalItems = document.getElementById(gridId).children.length;
+        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+        if (window.currentPage < totalPages - 1) {
+            window.currentPage++;
+            updatePaginationUI();
+        }
+    };
+
+    window.prevPage = function() {
+        if (window.currentPage > 0) {
+            window.currentPage--;
+            updatePaginationUI();
+        }
+    };
+
+    // --- BÚSQUEDA EN TIEMPO REAL CON IMÁGENES EXACTAS DE LA API ---
     window.doTopSearch = function(query) {
         const normalContent = document.getElementById('top-normal-content');
         const resultsWrapper = document.getElementById('search-horizontal-results');
@@ -367,7 +393,7 @@
             return;
         }
         
-        normalContent.style.display = 'none'; // Oculta tabs y titulo
+        normalContent.style.display = 'none'; 
         resultsWrapper.classList.remove('hidden');
         resultsWrapper.classList.add('flex');
         
@@ -380,8 +406,11 @@
             results.slice(0, 10).forEach(r => {
                 const btn = document.createElement('button');
                 btn.className = 'px-3 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded flex items-center gap-2 text-xs text-white transition-colors whitespace-nowrap shrink-0 group pointer-events-auto';
-                const iconType = r.type === 'Pawn' ? '🎩' : '😃';
-                btn.innerHTML = `<span class="font-medium">${iconType} ${r.name}</span> <span class="text-emerald-400 font-mono bg-emerald-400/10 px-1.5 py-0.5 rounded shadow-inner group-hover:bg-emerald-400/20">${r.code}</span>`;
+                
+                // Imagen real de la API
+                const imgNode = `<img src="${r.imgUrl}" class="w-5 h-5 object-contain" style="image-rendering: auto;">`;
+                
+                btn.innerHTML = `${imgNode} <span class="font-medium ml-1">${r.name}</span> <span class="text-emerald-400 font-mono bg-emerald-400/10 px-1.5 py-0.5 rounded shadow-inner group-hover:bg-emerald-400/20">${r.code}</span>`;
                 btn.onclick = () => window.topCopyCode(r.code, btn);
                 resultsContainer.appendChild(btn);
             });
@@ -399,12 +428,10 @@
             document.execCommand('copy');
             const originalHtml = btnElement.innerHTML;
             
-            // Feedback visual instantáneo
             btnElement.innerHTML = `<span class="text-emerald-400 font-bold px-2 py-0.5">✔ Copiado</span>`;
             btnElement.classList.replace('border-slate-600', 'border-emerald-500');
             btnElement.classList.replace('bg-slate-800', 'bg-emerald-900/40');
             
-            // Reset visual 
             setTimeout(() => {
                 btnElement.innerHTML = originalHtml;
                 btnElement.classList.replace('border-emerald-500', 'border-slate-600');
@@ -416,7 +443,6 @@
         document.body.removeChild(textarea);
     };
 
-    // Referencias a las vistas antiguas 
     const loadingEl = document.getElementById('loading');
     const contentEl = document.getElementById('content');
     const errorEl = document.getElementById('error');
@@ -451,19 +477,19 @@
         }
     }
 
-    // Card Original - Mantiene TODOS los estilos para no romper diseño 
+    // Card optimizada para tamaño máximo legible
     function createImageCard(topText, imageUrl, bottomText, containerElement) {
         const card = document.createElement('div');
-        // Usamos w-full y h-full para forzarlo dentro de la celda de la grid generada por JS
-        card.className = 'w-full h-full group bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm relative';
+        // Rediseño de card h-[145px] exacto para encajar 3 filas grandes
+        card.className = 'w-full h-[145px] group bg-slate-800/50 border border-slate-700/50 rounded-xl p-2.5 flex flex-col items-center justify-between shadow-sm relative';
         
         const topSpan = document.createElement('span');
-        topSpan.className = 'text-sm font-bold text-white mb-3 w-full text-center truncate capitalize';
+        topSpan.className = 'text-sm font-bold text-white mb-2 w-full text-center truncate capitalize';
         topSpan.title = topText;
         topSpan.textContent = topText;
 
         const imgContainer = document.createElement('div');
-        imgContainer.className = 'sprite-container mx-auto mb-3 bg-slate-900 rounded shadow-inner';
+        imgContainer.className = 'sprite-container mx-auto mb-2 bg-slate-900 rounded shadow-inner flex-1 w-full';
         
         const img = document.createElement('img');
         img.src = imageUrl;
@@ -475,9 +501,7 @@
                 this.src = this.src.replace('_80', '_40');
                 return;
             }
-
             this.style.display = 'none';
-            
             imgContainer.classList.add('flex', 'items-center', 'justify-center');
             const fallbackText = document.createElement('span');
             fallbackText.className = 'text-[10px] text-slate-500 font-medium text-center px-1';
@@ -486,7 +510,7 @@
         };
 
         const bottomSpan = document.createElement('span');
-        bottomSpan.className = 'copyable-code text-xs font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 mt-auto select-none';
+        bottomSpan.className = 'copyable-code text-[11px] font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 select-none';
         bottomSpan.textContent = bottomText;
         bottomSpan.title = "Interactúa desde buscador superior"; 
 
@@ -589,7 +613,7 @@
                     const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${nombre})_80`;
                     createImageCard(nombre, imgUrl, `(${nombre})`, smileysGrid);
                     
-                    window.apiSearchData.push({ type: 'Smiley', name: nombre, code: `(${nombre})` });
+                    window.apiSearchData.push({ type: 'Smiley', name: nombre, code: `(${nombre})`, imgUrl: imgUrl });
                 });
             } else {
                 smileysGrid.innerHTML = '<p class="col-span-full text-slate-500 text-sm italic py-4 text-center">No se encontraron smilies.</p>';
@@ -611,7 +635,7 @@
                         const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${validSmileyName})_80`;
                         createImageCard(powerName, imgUrl, `(hat#${code})`, pawnsGrid);
                         
-                        window.apiSearchData.push({ type: 'Pawn', name: validSmileyName, code: `(hat#${code})` });
+                        window.apiSearchData.push({ type: 'Pawn', name: validSmileyName, code: `(hat#${code})`, imgUrl: imgUrl });
                     });
                 } else {
                     pawnsGrid.innerHTML = '<p class="col-span-full text-slate-500 text-sm italic py-4 text-center">No se encontraron pawns.</p>';
@@ -622,10 +646,7 @@
 
             showView('content');
             cargarCountdown();
-            
-            // Ejecutar escalado dinámico exacto post-render
-            applyDynamicScale('smileys-grid');
-            applyDynamicScale('pawns-grid');
+            updatePaginationUI();
             
         } catch (error) {
             console.error("Error obteniendo datos:", error);
