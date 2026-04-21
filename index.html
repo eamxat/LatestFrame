@@ -70,9 +70,9 @@
         image-rendering: auto; 
     }
 
-    /* Ocultar barra de desplazamiento para dropdown de búsqueda superior */
+    /* Ocultar barra de desplazamiento para overflow seguro del buscador horizontal */
     .search-scroll::-webkit-scrollbar {
-        width: 4px;
+        height: 4px;
     }
     .search-scroll::-webkit-scrollbar-track {
         background: transparent; 
@@ -85,61 +85,56 @@
 </head>
 <body class="bg-transparent text-slate-200 h-screen w-screen overflow-hidden font-sans antialiased selection:bg-blue-500/30 select-none flex justify-center m-0 p-0">
 
-  <!-- CONTENEDOR MAESTRO ABSOLUTO PIXEL-PERFECT -->
-  <div class="relative w-[1303px] h-[578px]">
+  <!-- CONTENEDOR MAESTRO ABSOLUTO PIXEL-PERFECT (1303px de área total interactiva) -->
+  <div class="relative w-[1303px] h-[608px]">
 
-    <!-- CONTROLADOR SUPERIOR (ÚNICA ZONA INTERACTIVA) -->
+    <!-- CONTROLADOR SUPERIOR (ÚNICA ZONA INTERACTIVA - pt-[62px] por banner xat) -->
     <header class="absolute top-0 left-0 w-[1303px] h-[91px] pt-[62px] flex items-center justify-between px-6 pointer-events-auto z-50">
         
-        <div class="flex items-center gap-6">
-            <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight">
+        <!-- CONTENIDO NORMAL DE CABECERA -->
+        <div id="top-normal-content" class="flex items-center gap-6 w-full transition-opacity">
+            <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight whitespace-nowrap">
                 Último Power
             </h1>
             
-            <!-- Pestañas de Navegación (Controla Panel Derecho) -->
+            <!-- Pestañas de Navegación -->
             <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm">
-                <button onclick="window.switchRightView('smilies')" id="top-btn-smilies" class="px-5 py-1.5 bg-blue-600 border border-blue-500 rounded-lg text-xs font-bold text-white shadow-sm transition-all">
+                <button onclick="window.switchRightView('smilies')" id="top-btn-smilies" class="px-5 py-1 bg-blue-600 border border-blue-500 rounded-lg text-xs font-bold text-white shadow-sm transition-all">
                     Smilies
                 </button>
-                <button onclick="window.switchRightView('pawns')" id="top-btn-pawns" class="px-5 py-1.5 bg-transparent hover:bg-slate-800 border border-transparent rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all opacity-80">
+                <button onclick="window.switchRightView('pawns')" id="top-btn-pawns" class="px-5 py-1 bg-transparent hover:bg-slate-800 border border-transparent rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all opacity-80">
                     Pawns
-                </button>
-            </div>
-            
-            <!-- Paginación (Controla Panel Derecho) -->
-            <div class="flex items-center gap-3 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm">
-                <button onclick="window.prevPage()" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
-                </button>
-                <span id="page-indicator" class="text-xs font-bold text-slate-300 font-mono w-10 text-center">1/1</span>
-                <button onclick="window.nextPage()" class="text-slate-400 hover:text-white transition-colors">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
                 </button>
             </div>
         </div>
 
-        <!-- Buscador con Conexión API y Copiado Integrado -->
-        <div class="relative w-72">
+        <!-- CONTENIDO BUSCADOR HORIZONTAL (Oculto por defecto, visible al tipear) -->
+        <div id="search-horizontal-results" class="hidden flex-1 items-center gap-3 overflow-hidden h-full px-4 w-full">
+           <span class="text-xs text-slate-400 whitespace-nowrap font-semibold shrink-0">Resultados:</span>
+           <div id="search-results-container" class="flex items-center gap-2 flex-1 overflow-x-auto search-scroll h-full pb-1 pt-1">
+               <!-- CHIPS DE RESULTADOS DINÁMICOS -->
+           </div>
+        </div>
+
+        <!-- BUSCADOR INPUT -->
+        <div class="relative w-72 shrink-0 h-[30px] ml-auto">
             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
             </div>
-            <input type="text" id="top-search" oninput="window.doTopSearch(this.value)" placeholder="Buscar códigos..." class="block w-full pl-10 pr-3 py-1.5 border border-slate-700 rounded-xl leading-5 bg-slate-900/80 backdrop-blur-sm text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-800 focus:border-blue-500 transition-colors text-sm shadow-md">
-            
-            <!-- Resultados de Búsqueda -->
-            <div id="search-dropdown" class="absolute z-50 w-full mt-2 bg-slate-800 border border-slate-700 rounded-xl shadow-2xl hidden flex-col max-h-56 overflow-y-auto search-scroll">
-                <!-- Generado dinámicamente -->
-            </div>
+            <input type="text" id="top-search" oninput="window.doTopSearch(this.value)" placeholder="Buscar códigos..." class="block w-full h-full pl-9 pr-3 py-1 border border-slate-700 rounded-lg leading-5 bg-slate-900/80 backdrop-blur-sm text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-800 focus:border-blue-500 transition-colors text-xs shadow-md">
         </div>
     </header>
 
-    <!-- ÁREA PRINCIPAL XATFRAME (Bloqueada para clics) -->
-    <main class="absolute top-[91px] left-1/2 -translate-x-1/2 w-[1227px] h-[487px] flex justify-between pointer-events-none">
+    <!-- ÁREA PRINCIPAL XATFRAME (100% Bloqueada para clics) -->
+    <!-- Inicia exactamente después de los 91px del header. -->
+    <main class="absolute top-[91px] left-0 w-[1303px] h-[487px] pointer-events-none">
 
-        <!-- PANEL IZQUIERDO (Detalles Fijos) -->
-        <aside class="w-[229px] h-[408px] relative overflow-hidden">
-            <!-- Escala CSS Exacta: Ancho interno 380px escalado al 60.2% -> 229px -->
+        <!-- PANEL IZQUIERDO (CUADRO 1: DETALLES) -->
+        <!-- Posición: +30px verticalmente, 40px margen izquierdo. No altera interno. -->
+        <aside class="absolute top-[30px] left-[40px] w-[229px] h-[408px] overflow-hidden pointer-events-none">
+            <!-- Escala CSS Exacta que ya mantenías: Ancho interno 380px escalado al 60.2% -> 229px -->
             <div style="width: 380px; transform: scale(0.602); transform-origin: top left; position: absolute; top: 0; left: 0;">
                 
                 <section id="section-details" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden w-full">
@@ -202,8 +197,9 @@
             </div>
         </aside>
 
-        <!-- ZONA CENTRAL XAT (NO TOCAR) -->
-        <div class="w-[726px] h-[487px] shrink-0">
+        <!-- ZONA CENTRAL XAT (CUADRO 2: CHAT) -->
+        <!-- Centrada dinámicamente y con top:0 para mantener el offset relativo del chat box -->
+        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[726px] h-[487px] shrink-0 pointer-events-none">
             <!-- Esqueleto de Carga visible desde el centro absoluto del contenedor total -->
             <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center -translate-y-12 animate-pulse-slow">
                 <div class="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
@@ -221,30 +217,31 @@
             </div>
         </div>
 
-        <!-- PANEL DERECHO (Paginado, Dinámico, Sin Scroll) -->
-        <aside class="w-[272px] h-[473px] relative overflow-hidden">
-            <!-- Escala CSS Exacta: Ancho interno 340px escalado al 80% -> 272px -->
-            <div id="content" class="hidden" style="width: 340px; transform: scale(0.8); transform-origin: top left; position: absolute; top: 0; left: 0;">
+        <!-- PANEL DERECHO (CUADRO 3: SMILIES/PAWNS) -->
+        <!-- Posición: +30px verticalmente, anclado a la derecha sin romper grid de xat -->
+        <aside class="absolute top-[30px] right-[0px] w-[272px] h-[473px] overflow-hidden pointer-events-none">
+            
+            <div id="content" class="hidden w-full h-full">
                 
                 <!-- Sección de Smilies -->
-                <section id="section-smilies" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden p-6 w-full h-[590px]">
-                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3">
-                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(smile)_20" alt="Smile icon" class="h-7 w-7 object-contain"> Smilies del Power
+                <section id="section-smilies" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6 w-full h-full flex flex-col">
+                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3 shrink-0">
+                        <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(smile)_20" alt="Smile icon" class="h-7 w-7 object-contain"> Smilies
                     </h2>
-                    <!-- Forzamos grid-cols-2 por el espacio, con paginación desde JS -->
-                    <div id="smileys-grid" class="grid grid-cols-2 gap-4">
-                        <!-- Generado dinámicamente -->
+                    <!-- Flex container interno para aplicar escala matemática -->
+                    <div class="flex-1 w-full overflow-hidden flex justify-center">
+                        <div id="smileys-grid"></div>
                     </div>
                 </section>
 
                 <!-- Sección de Pawns -->
-                <section id="section-pawns" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden p-6 w-full h-[590px] hidden">
-                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3">
+                <section id="section-pawns" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 p-6 w-full h-full hidden flex-col">
+                    <h2 class="text-xl font-bold text-white mb-6 border-b border-slate-800 pb-4 flex items-center gap-3 shrink-0">
                         <img src="https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(p1pwn)_80" alt="Pawn icon" class="h-11 w-11 object-contain"> Pawns
                     </h2>
-                    <!-- Forzamos grid-cols-2 por el espacio, con paginación desde JS -->
-                    <div id="pawns-grid" class="grid grid-cols-2 gap-4">
-                        <!-- Generado dinámicamente -->
+                    <!-- Flex container interno para aplicar escala matemática -->
+                    <div class="flex-1 w-full overflow-hidden flex justify-center">
+                        <div id="pawns-grid"></div>
                     </div>
                 </section>
 
@@ -257,14 +254,11 @@
   <script>
     // ESTADOS GLOBALES DE NAVEGACIÓN Y BÚSQUEDA
     window.currentRightView = 'smilies';
-    window.currentPage = 0;
-    const ITEMS_PER_PAGE = 6; // Perfectamente calculado para encajar 3 filas de 2 sin desbordar
     window.apiSearchData = [];
 
-    // --- NUEVO SISTEMA DE CONTROL DE VISTAS (Panel Derecho) ---
+    // --- SISTEMA DE CONTROL DE VISTAS (Panel Derecho) ---
     window.switchRightView = function(view) {
         window.currentRightView = view;
-        window.currentPage = 0; // Resetear página
         
         const secSmilies = document.getElementById('section-smilies');
         const secPawns = document.getElementById('section-pawns');
@@ -273,7 +267,9 @@
 
         if (view === 'smilies') {
             secSmilies.classList.remove('hidden');
+            secSmilies.classList.add('flex');
             secPawns.classList.add('hidden');
+            secPawns.classList.remove('flex');
             
             btnS.classList.replace('bg-transparent', 'bg-blue-600');
             btnS.classList.replace('border-transparent', 'border-blue-500');
@@ -286,7 +282,9 @@
             btnP.classList.add('opacity-80', 'hover:bg-slate-800');
         } else {
             secPawns.classList.remove('hidden');
+            secPawns.classList.add('flex');
             secSmilies.classList.add('hidden');
+            secSmilies.classList.remove('flex');
             
             btnP.classList.replace('bg-transparent', 'bg-blue-600');
             btnP.classList.replace('border-transparent', 'border-blue-500');
@@ -298,83 +296,99 @@
             btnS.classList.replace('text-white', 'text-slate-400');
             btnS.classList.add('opacity-80', 'hover:bg-slate-800');
         }
-        
-        updatePaginationUI();
     };
 
-    // --- SISTEMA DE PAGINACIÓN FLUIDA ---
-    function updatePaginationUI() {
-        const gridId = window.currentRightView === 'smilies' ? 'smileys-grid' : 'pawns-grid';
+    // --- NUEVO SISTEMA DE CÁLCULO DE ESCALA DINÁMICA (Sin scroll, Visibilidad 100%) ---
+    function applyDynamicScale(gridId) {
         const grid = document.getElementById(gridId);
-        const cards = grid.children;
-        const totalItems = cards.length;
-        const totalPages = Math.max(1, Math.ceil(totalItems / ITEMS_PER_PAGE));
+        const items = grid.children.length;
+        if (items === 0) return;
+
+        // Limpieza de estilos por si se recalcula
+        grid.style.transform = '';
+        grid.style.width = '';
+        grid.style.height = '';
+        grid.style.gridTemplateColumns = '';
         
-        // Evitar que la página se salga de rango si cambia rápido
-        if (window.currentPage >= totalPages) window.currentPage = totalPages - 1;
-        
-        const start = window.currentPage * ITEMS_PER_PAGE;
-        const end = start + ITEMS_PER_PAGE;
-        
-        for (let i = 0; i < cards.length; i++) {
-            if (i >= start && i < end) {
-                cards[i].style.display = 'flex';
-            } else {
-                cards[i].style.display = 'none';
+        // Área disponible en el Panel Derecho 272x473
+        // Padding es 24px cada lado (w=224px). Header ~60px + margin (h=~365px).
+        const targetW = 272 - 48; 
+        const targetH = 473 - 100; 
+
+        // Medidas base de la carta renderizada (aproximadas basadas en Tailwind usado)
+        const cardW = 150; 
+        const cardH = 180; 
+        const gap = 16;
+
+        let bestScale = 0;
+        let bestCols = 1;
+        let bestRows = 1;
+
+        // Iterar posibles columnas para encontrar la escala matemática óptima
+        for (let cols = 1; cols <= items; cols++) {
+            const rows = Math.ceil(items / cols);
+            const w = cols * cardW + (cols - 1) * gap;
+            const h = rows * cardH + (rows - 1) * gap;
+            
+            const scale = Math.min(targetW / w, targetH / h);
+            if (scale > bestScale) {
+                bestScale = scale;
+                bestCols = cols;
+                bestRows = rows;
             }
         }
-        
-        document.getElementById('page-indicator').textContent = `${window.currentPage + 1}/${totalPages}`;
+
+        // Aplicar la cuadrícula exacta y forzar su envolvente para escalarla
+        const innerW = bestCols * cardW + (bestCols - 1) * gap;
+        const innerH = bestRows * cardH + (bestRows - 1) * gap;
+
+        grid.style.display = 'grid';
+        grid.style.gridTemplateColumns = `repeat(${bestCols}, ${cardW}px)`;
+        grid.style.gap = `${gap}px`;
+        grid.style.width = `${innerW}px`;
+        grid.style.height = `${innerH}px`;
+
+        grid.style.transform = `scale(${bestScale})`;
+        grid.style.transformOrigin = "top center";
     }
 
-    window.nextPage = function() {
-        const gridId = window.currentRightView === 'smilies' ? 'smileys-grid' : 'pawns-grid';
-        const totalItems = document.getElementById(gridId).children.length;
-        const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
-        if (window.currentPage < totalPages - 1) {
-            window.currentPage++;
-            updatePaginationUI();
-        }
-    };
-
-    window.prevPage = function() {
-        if (window.currentPage > 0) {
-            window.currentPage--;
-            updatePaginationUI();
-        }
-    };
-
-    // --- NUEVO SISTEMA DE BÚSQUEDA EN TIEMPO REAL DESDE EL CONTROLADOR ---
+    // --- NUEVO SISTEMA DE BÚSQUEDA EN TIEMPO REAL DESDE EL CONTROLADOR (Sin Dropdown) ---
     window.doTopSearch = function(query) {
-        const dropdown = document.getElementById('search-dropdown');
-        dropdown.innerHTML = '';
+        const normalContent = document.getElementById('top-normal-content');
+        const resultsWrapper = document.getElementById('search-horizontal-results');
+        const resultsContainer = document.getElementById('search-results-container');
+        
+        resultsContainer.innerHTML = '';
         
         if (!query.trim()) {
-            dropdown.classList.add('hidden');
+            resultsWrapper.classList.add('hidden');
+            resultsWrapper.classList.remove('flex');
+            normalContent.style.display = 'flex';
             return;
         }
+        
+        normalContent.style.display = 'none'; // Oculta tabs y titulo
+        resultsWrapper.classList.remove('hidden');
+        resultsWrapper.classList.add('flex');
         
         const term = query.toLowerCase();
         const results = window.apiSearchData.filter(d => d.name.toLowerCase().includes(term) || d.code.toLowerCase().includes(term));
         
         if (results.length === 0) {
-            dropdown.innerHTML = '<div class="p-4 text-slate-400 text-sm italic text-center">Sin resultados</div>';
+            resultsContainer.innerHTML = '<span class="text-xs text-slate-500 italic">No hay coincidencias</span>';
         } else {
-            // Mostrar hasta 10 resultados para no sobrecargar el frame
             results.slice(0, 10).forEach(r => {
-                const div = document.createElement('div');
-                div.className = 'p-3 hover:bg-slate-700 cursor-pointer text-sm text-white flex justify-between items-center border-b border-slate-700/50 transition-colors';
-                // Iconito de si es Pawn o Smiley para contexto
+                const btn = document.createElement('button');
+                btn.className = 'px-3 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded flex items-center gap-2 text-xs text-white transition-colors whitespace-nowrap shrink-0 group pointer-events-auto';
                 const iconType = r.type === 'Pawn' ? '🎩' : '😃';
-                div.innerHTML = `<span class="font-medium">${iconType} ${r.name}</span><span class="text-xs text-emerald-400 font-mono bg-emerald-400/10 px-2 py-1 rounded">${r.code}</span>`;
-                div.onclick = () => window.topCopyCode(r.code);
-                dropdown.appendChild(div);
+                btn.innerHTML = `<span class="font-medium">${iconType} ${r.name}</span> <span class="text-emerald-400 font-mono bg-emerald-400/10 px-1.5 py-0.5 rounded shadow-inner group-hover:bg-emerald-400/20">${r.code}</span>`;
+                btn.onclick = () => window.topCopyCode(r.code, btn);
+                resultsContainer.appendChild(btn);
             });
         }
-        dropdown.classList.remove('hidden');
     };
 
-    window.topCopyCode = function(text) {
+    window.topCopyCode = function(text, btnElement) {
         const textarea = document.createElement('textarea');
         textarea.value = text;
         textarea.style.position = 'fixed';
@@ -383,28 +397,30 @@
         textarea.select();
         try {
             document.execCommand('copy');
-            const searchInput = document.getElementById('top-search');
-            searchInput.value = '';
-            searchInput.placeholder = '¡Código copiado con éxito!';
-            searchInput.classList.add('border-emerald-500', 'placeholder-emerald-400');
-            document.getElementById('search-dropdown').classList.add('hidden');
+            const originalHtml = btnElement.innerHTML;
             
-            setTimeout(() => { 
-                searchInput.placeholder = 'Buscar códigos...'; 
-                searchInput.classList.remove('border-emerald-500', 'placeholder-emerald-400');
-            }, 2000);
+            // Feedback visual instantáneo
+            btnElement.innerHTML = `<span class="text-emerald-400 font-bold px-2 py-0.5">✔ Copiado</span>`;
+            btnElement.classList.replace('border-slate-600', 'border-emerald-500');
+            btnElement.classList.replace('bg-slate-800', 'bg-emerald-900/40');
+            
+            // Reset visual 
+            setTimeout(() => {
+                btnElement.innerHTML = originalHtml;
+                btnElement.classList.replace('border-emerald-500', 'border-slate-600');
+                btnElement.classList.replace('bg-emerald-900/40', 'bg-slate-800');
+            }, 1200);
         } catch(e) {
             console.error(e);
         }
         document.body.removeChild(textarea);
     };
 
-    // Referencias a las vistas antiguas (ahora integradas en el flujo absolute)
+    // Referencias a las vistas antiguas 
     const loadingEl = document.getElementById('loading');
     const contentEl = document.getElementById('content');
     const errorEl = document.getElementById('error');
 
-    // Referencias a la tabla
     const tId = document.getElementById('t-id');
     const tImg = document.getElementById('t-img');
     const tName = document.getElementById('t-name');
@@ -413,17 +429,14 @@
     const tStore = document.getElementById('t-store');
     const tPrice = document.getElementById('t-price');
 
-    // Referencias al Countdown
     const rowCountdown = document.getElementById('row-countdown');
     const tCountdownStatus = document.getElementById('t-countdown-status');
     const tCountdownTimer = document.getElementById('t-countdown-timer');
     let countdownInterval;
 
-    // Referencias a los grids
     const smileysGrid = document.getElementById('smileys-grid');
     const pawnsGrid = document.getElementById('pawns-grid');
 
-    // Control de vistas principal simplificado
     function showView(view) {
         loadingEl.classList.add('hidden');
         contentEl.classList.add('hidden');
@@ -438,10 +451,11 @@
         }
     }
 
-    // Mantenida intacta estructuralmente para no romper clases, pero ahora paginada
+    // Card Original - Mantiene TODOS los estilos para no romper diseño 
     function createImageCard(topText, imageUrl, bottomText, containerElement) {
         const card = document.createElement('div');
-        card.className = 'group bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex flex-col items-center justify-center hover:bg-slate-700 hover:border-slate-600 transition-all duration-300 shadow-sm hover:shadow-md relative';
+        // Usamos w-full y h-full para forzarlo dentro de la celda de la grid generada por JS
+        card.className = 'w-full h-full group bg-slate-800/50 border border-slate-700/50 rounded-xl p-4 flex flex-col items-center justify-center shadow-sm relative';
         
         const topSpan = document.createElement('span');
         topSpan.className = 'text-sm font-bold text-white mb-3 w-full text-center truncate capitalize';
@@ -449,7 +463,7 @@
         topSpan.textContent = topText;
 
         const imgContainer = document.createElement('div');
-        imgContainer.className = 'sprite-container mx-auto mb-3 bg-slate-900 rounded group-hover:scale-110 transition-transform duration-300 shadow-inner';
+        imgContainer.className = 'sprite-container mx-auto mb-3 bg-slate-900 rounded shadow-inner';
         
         const img = document.createElement('img');
         img.src = imageUrl;
@@ -472,9 +486,9 @@
         };
 
         const bottomSpan = document.createElement('span');
-        bottomSpan.className = 'copyable-code text-xs font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 mt-auto group-hover:text-white group-hover:border-slate-500 transition-colors cursor-pointer select-text';
+        bottomSpan.className = 'copyable-code text-xs font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 mt-auto select-none';
         bottomSpan.textContent = bottomText;
-        bottomSpan.title = "Interactúa desde buscador superior"; // Actualizado por regla de iframe
+        bottomSpan.title = "Interactúa desde buscador superior"; 
 
         imgContainer.appendChild(img);
         card.appendChild(topSpan);
@@ -541,7 +555,7 @@
 
     async function cargarDatos() {
         showView('loading');
-        window.apiSearchData = []; // Limpiar base de búsqueda
+        window.apiSearchData = []; 
         
         try {
             const res = await fetch("https://illuxat.com/api/latestpower");
@@ -575,7 +589,6 @@
                     const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${nombre})_80`;
                     createImageCard(nombre, imgUrl, `(${nombre})`, smileysGrid);
                     
-                    // Llenado de API interna para búsqueda
                     window.apiSearchData.push({ type: 'Smiley', name: nombre, code: `(${nombre})` });
                 });
             } else {
@@ -598,7 +611,6 @@
                         const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${validSmileyName})_80`;
                         createImageCard(powerName, imgUrl, `(hat#${code})`, pawnsGrid);
                         
-                        // Llenado de API interna para búsqueda
                         window.apiSearchData.push({ type: 'Pawn', name: validSmileyName, code: `(hat#${code})` });
                     });
                 } else {
@@ -611,8 +623,9 @@
             showView('content');
             cargarCountdown();
             
-            // Iniciar paginación en la vista por defecto
-            updatePaginationUI();
+            // Ejecutar escalado dinámico exacto post-render
+            applyDynamicScale('smileys-grid');
+            applyDynamicScale('pawns-grid');
             
         } catch (error) {
             console.error("Error obteniendo datos:", error);
@@ -621,13 +634,6 @@
     }
 
     cargarDatos();
-
-    // Event Listener extra para cerrar el dropdown si dan click fuera del buscador
-    document.addEventListener('click', function(e) {
-        if (!e.target.closest('#search-dropdown') && e.target.id !== 'top-search') {
-            document.getElementById('search-dropdown').classList.add('hidden');
-        }
-    });
 
   </script>
 
