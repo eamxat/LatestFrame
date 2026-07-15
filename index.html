@@ -14,6 +14,10 @@
       animation: pulse-slow 2.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
+    body {
+        background: transparent !important;
+    }
+
     /* Contenedor estricto para el sprite */
     .sprite-container {
         width: 80px;
@@ -83,20 +87,21 @@
     }
   </style>
 </head>
+<!-- pointer-events-none en el body permite que los clics atraviesen el fondo transparente hacia xat -->
 <body class="bg-transparent text-slate-200 h-screen w-screen overflow-hidden font-sans antialiased selection:bg-blue-500/30 select-none flex justify-center m-0 p-0 pointer-events-none">
 
-  <!-- CONTENEDOR MAESTRO -->
-  <div class="relative w-[1303px] h-[608px] pointer-events-none" style="z-index: 2147483647;">
+  <!-- CONTENEDOR MAESTRO (Sin fondo, solo posicionamiento) -->
+  <div class="relative w-[1303px] h-[608px] pointer-events-none">
 
     <!-- CONTROLADOR SUPERIOR -->
-    <header class="absolute top-0 left-0 w-full h-[91px] pt-[62px] px-6 flex items-center justify-between pointer-events-none">
+    <header class="absolute top-0 left-0 w-full h-[91px] pt-[62px] px-6 flex items-center justify-between pointer-events-none z-50">
         
         <div id="top-normal-content" class="flex items-center gap-6 w-full transition-opacity pointer-events-none">
             <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight whitespace-nowrap pointer-events-auto">
                 Último Power
             </h1>
             
-            <!-- Botón Opciones (Limpio, sin el menú adentro) -->
+            <!-- Botón Opciones -->
             <button onclick="window.toggleDropdown(event, 'dropdown-menu')" class="px-4 py-1.5 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all shadow-md flex items-center gap-2 backdrop-blur-sm cursor-pointer pointer-events-auto">
                 Opciones
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
@@ -123,7 +128,7 @@
                 </button>
             </div>
 
-            <!-- Botón de Pruebas (Limpio, sin el menú adentro) -->
+            <!-- Botón de Pruebas -->
             <button onclick="window.toggleDropdown(event, 'dropdown-test-menu')" id="top-btn-test" class="px-3 py-1.5 ml-2 bg-purple-600/20 border border-purple-500/50 rounded-lg text-xs font-bold text-purple-300 hover:text-white hover:bg-purple-500/40 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer pointer-events-auto">
                 <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
                 Pruebas
@@ -141,6 +146,7 @@
         <div id="search-horizontal-results" class="hidden flex-1 items-center gap-3 overflow-hidden h-[30px] px-4 w-full pointer-events-none">
            <span class="text-xs text-slate-400 whitespace-nowrap font-semibold shrink-0 pointer-events-auto">Resultados:</span>
            <div id="search-results-container" class="flex items-center gap-2 flex-1 overflow-x-auto search-scroll h-full pb-1 pt-1 pointer-events-auto">
+               <!-- CHIPS DE RESULTADOS DINÁMICOS -->
            </div>
         </div>
 
@@ -222,13 +228,13 @@
             </div>
         </aside>
 
-        <!-- ZONA CENTRAL XAT -->
+        <!-- ZONA CENTRAL XAT (Totalmente vacía y transparente, solo los loaders) -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[726px] h-[487px] shrink-0 pointer-events-none">
             <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center -translate-y-12 animate-pulse-slow">
                 <div class="w-16 h-16 border-4 border-blue-500/30 border-t-blue-500 rounded-full animate-spin mb-6 shadow-[0_0_15px_rgba(59,130,246,0.5)]"></div>
                 <p class="text-blue-400 font-semibold text-lg tracking-widest uppercase bg-slate-900/50 px-6 py-2 rounded-full backdrop-blur-sm">Cargando catálogo...</p>
             </div>
-            <div id="error" class="absolute inset-0 flex-col items-center justify-center -translate-y-12 hidden">
+            <div id="error" class="absolute inset-0 flex-col items-center justify-center -translate-y-12 hidden pointer-events-auto">
                 <div class="bg-red-500/10 border border-red-500/30 rounded-2xl p-8 max-w-md mx-auto backdrop-blur-sm text-center">
                     <svg class="w-16 h-16 mx-auto mb-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
@@ -328,20 +334,18 @@
             }
         });
 
-        // Si el menú está oculto, lo posicionamos y lo mostramos
+        // Si el menú está oculto, lo posicionamos usando las coordenadas exactas de la pantalla
         if (menu.classList.contains('hidden')) {
-            // Obtenemos las coordenadas exactas del botón sin importar su anidación en el DOM
             const rect = btn.getBoundingClientRect();
             
-            // Asignamos coordenadas relativas al Viewport
+            // Altura relativa
             menu.style.top = (rect.bottom + 8) + 'px'; 
             
             if (menuId === 'dropdown-test-menu') {
-                // Para Pruebas (alineado a la derecha del botón)
-                // 192px es el ancho exacto de Tailwind w-48 (12rem)
-                menu.style.left = (rect.right - 192) + 'px'; 
+                // Alineado a la derecha del botón
+                menu.style.left = (rect.right - 192) + 'px'; // 192px = w-48
             } else {
-                // Para Opciones (alineado a la izquierda del botón)
+                // Alineado a la izquierda del botón
                 menu.style.left = rect.left + 'px';
             }
 
@@ -353,10 +357,9 @@
         }
     };
 
-    // Cerrar los menús si hacemos clic afuera de ellos
+    // Cerrar los menús si hacemos clic en cualquier parte de nuestra UI
     document.addEventListener('click', function(e) {
         document.querySelectorAll('.portal-menu').forEach(menu => {
-            // Si el clic no fue adentro de un menú
             if (!menu.contains(e.target)) {
                 menu.classList.add('hidden');
                 menu.classList.remove('flex');
@@ -364,7 +367,16 @@
         });
     });
 
-    // Opcional: Cerrar menús si la ventana cambia de tamaño por seguridad
+    // TRUCO DE SEGURIDAD: Si el usuario da clic en el chat de xat (iframe externo), nuestra ventana pierde el foco
+    // Escuchamos el evento 'blur' para cerrar los menús si interactúan con el xat de fondo
+    window.addEventListener('blur', function() {
+        document.querySelectorAll('.portal-menu').forEach(menu => {
+            menu.classList.add('hidden');
+            menu.classList.remove('flex');
+        });
+    });
+
+    // Cerrar menús al redimensionar ventana por seguridad
     window.addEventListener('resize', () => {
         document.querySelectorAll('.portal-menu').forEach(m => {
             m.classList.add('hidden');
@@ -408,7 +420,7 @@
     // --- SISTEMA DE CONTROL DE VISTAS ---
     window.switchRightView = function(view) {
         window.currentRightView = view;
-        window.currentPage = 0; // Resetear página al cambiar tab
+        window.currentPage = 0; 
         
         const secSmilies = document.getElementById('section-smilies');
         const secPawns = document.getElementById('section-pawns');
@@ -490,7 +502,7 @@
         }
     };
 
-    // --- BÚSQUEDA EN TIEMPO REAL CON IMÁGENES EXACTAS DE LA API ---
+    // --- BÚSQUEDA EN TIEMPO REAL ---
     window.doTopSearch = function(query) {
         const normalContent = document.getElementById('top-normal-content');
         const resultsWrapper = document.getElementById('search-horizontal-results');
@@ -518,10 +530,7 @@
             results.slice(0, 10).forEach(r => {
                 const btn = document.createElement('button');
                 btn.className = 'px-3 py-1 bg-slate-800 hover:bg-slate-700 border border-slate-600 rounded flex items-center gap-2 text-xs text-white transition-colors whitespace-nowrap shrink-0 group pointer-events-auto';
-                
-                // Imagen real de la API
                 const imgNode = `<img src="${r.imgUrl}" class="w-5 h-5 object-contain" style="image-rendering: auto;">`;
-                
                 btn.innerHTML = `${imgNode} <span class="font-medium ml-1">${r.name}</span> <span class="text-emerald-400 font-mono bg-emerald-400/10 px-1.5 py-0.5 rounded shadow-inner group-hover:bg-emerald-400/20">${r.code}</span>`;
                 btn.onclick = () => window.topCopyCode(r.code, btn);
                 resultsContainer.appendChild(btn);
@@ -539,7 +548,6 @@
         try {
             document.execCommand('copy');
             const originalHtml = btnElement.innerHTML;
-            
             btnElement.innerHTML = `<span class="text-emerald-400 font-bold px-2 py-0.5" data-i18n="copied">${i18n[currentLang].copied}</span>`;
             btnElement.classList.replace('border-slate-600', 'border-emerald-500');
             btnElement.classList.replace('bg-slate-800', 'bg-emerald-900/40');
@@ -562,7 +570,6 @@
     const loadingEl = document.getElementById('loading');
     const contentEl = document.getElementById('content');
     const errorEl = document.getElementById('error');
-
     const tId = document.getElementById('t-id');
     const tImg = document.getElementById('t-img');
     const tName = document.getElementById('t-name');
@@ -570,12 +577,10 @@
     const tStatusBadge = document.getElementById('t-status-badge');
     const tStore = document.getElementById('t-store');
     const tPrice = document.getElementById('t-price');
-
     const rowCountdown = document.getElementById('row-countdown');
     const tCountdownStatus = document.getElementById('t-countdown-status');
     const tCountdownTimer = document.getElementById('t-countdown-timer');
     let countdownInterval;
-
     const smileysGrid = document.getElementById('smileys-grid');
     const pawnsGrid = document.getElementById('pawns-grid');
 
@@ -595,7 +600,7 @@
 
     function createImageCard(topText, imageUrl, bottomText, containerElement) {
         const card = document.createElement('div');
-        card.className = 'w-full h-[145px] group bg-slate-800/50 border border-slate-700/50 rounded-xl p-2 flex flex-col items-center justify-center gap-1.5 shadow-sm relative';
+        card.className = 'w-full h-[145px] group bg-slate-800/50 border border-slate-700/50 rounded-xl p-2 flex flex-col items-center justify-center gap-1.5 shadow-sm relative pointer-events-auto';
         
         const topSpan = document.createElement('span');
         topSpan.className = 'text-sm font-bold text-white w-full text-center truncate capitalize shrink-0 leading-tight';
@@ -624,9 +629,9 @@
         };
 
         const bottomSpan = document.createElement('span');
-        bottomSpan.className = 'copyable-code text-[11px] font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 select-none shrink-0 transition-colors group-hover:border-slate-500 group-hover:text-white';
+        bottomSpan.className = 'copyable-code text-[11px] font-mono font-semibold text-slate-300 bg-slate-900/80 px-2 py-1.5 rounded-lg w-full text-center truncate border border-slate-700 select-none shrink-0 transition-colors group-hover:border-slate-500 group-hover:text-white cursor-pointer';
         bottomSpan.textContent = bottomText;
-        bottomSpan.title = "Interactúa desde buscador superior"; 
+        bottomSpan.title = "Haz click en buscar arriba"; 
 
         imgContainer.appendChild(img);
         card.appendChild(topSpan);
@@ -645,7 +650,6 @@
 
             if (data.code === 200) {
                 rowCountdown.classList.remove('hidden'); 
-                
                 let apiStatus = data.status || "Estado desconocido";
                 if (apiStatus.toLowerCase() === "will be released") {
                     apiStatus = "Tiempo Restante";
@@ -654,12 +658,10 @@
 
                 if (data.status_code === 'counting' && data.remaining_int) {
                     const targetTime = Date.now() + (parseInt(data.remaining_int, 10) * 1000);
-                    
                     if (countdownInterval) clearInterval(countdownInterval);
 
                     const updateTimer = () => {
                         const timeLeft = Math.floor((targetTime - Date.now()) / 1000);
-
                         if (timeLeft <= 0) {
                             tCountdownTimer.textContent = "¡Lanzado!";
                             tCountdownTimer.classList.remove('text-amber-400');
@@ -697,9 +699,7 @@
         
         try {
             const res = await fetch("https://illuxat.com/api/latestpower");
-            
             if (!res.ok) throw new Error(`Error HTTP: ${res.status}`);
-            
             const json = await res.json();
             const item = json.data.latest;
 
@@ -726,7 +726,6 @@
                 item.Smileys.forEach(nombre => {
                     const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${nombre})_80`;
                     createImageCard(nombre, imgUrl, `(${nombre})`, smileysGrid);
-                    
                     window.apiSearchData.push({ type: 'Smiley', name: nombre, code: `(${nombre})`, imgUrl: imgUrl });
                 });
             } else {
@@ -736,19 +735,15 @@
             pawnsGrid.innerHTML = ''; 
             if (item?.Pawns && typeof item.Pawns === 'object') {
                 const pawnsEntries = Object.entries(item.Pawns); 
-
                 if (pawnsEntries.length > 0) {
                     pawnsEntries.forEach(([code, nombre]) => {
                         const powerName = item.Name || "Desconocido";
-                        
                         let validSmileyName = nombre;
                         if (!validSmileyName || String(validSmileyName).trim() === '') {
                             validSmileyName = (item.Smileys && item.Smileys.length > 0) ? item.Smileys[0] : powerName.toLowerCase();
                         }
-                        
                         const imgUrl = `https://s0.xat.com/web_gear/chat/GetStrip8.php?c=a_(${validSmileyName})_80`;
                         createImageCard(powerName, imgUrl, `(hat#${code})`, pawnsGrid);
-                        
                         window.apiSearchData.push({ type: 'Pawn', name: validSmileyName, code: `(hat#${code})`, imgUrl: imgUrl });
                     });
                 } else {
@@ -769,7 +764,6 @@
     }
 
     cargarDatos();
-
   </script>
 
 </body>
