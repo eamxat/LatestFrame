@@ -83,137 +83,127 @@
     }
   </style>
 </head>
-<body class="bg-transparent text-slate-200 h-screen w-screen overflow-hidden font-sans antialiased selection:bg-blue-500/30 select-none flex justify-center m-0 p-0">
+<body class="bg-transparent text-slate-200 h-screen w-screen overflow-hidden font-sans antialiased selection:bg-blue-500/30 select-none flex justify-center m-0 p-0 pointer-events-none">
 
-  <!-- CONTENEDOR MAESTRO ABSOLUTO PIXEL-PERFECT (1303px de área total interactiva) -->
-  <div class="relative w-[1303px] h-[608px]">
+  <!-- CONTENEDOR MAESTRO (z-index supremo para ganar a la caja de xat, pointer-events-none para dejar pasar clics al fondo) -->
+  <div class="relative w-[1303px] h-[608px] pointer-events-none" style="z-index: 2147483647;">
 
-    <!-- CONTROLADOR SUPERIOR ARQUITECTURA CORREGIDA:
-         Capa invisible que abarca TODA la pantalla (608px) para que el navegador no corte 
-         los clics de los menús que se despliegan hacia abajo. Z-index absoluto máximo. -->
-    <header class="absolute top-0 left-0 w-[1303px] h-[608px] pointer-events-none" style="z-index: 2147483647;">
+    <!-- CONTROLADOR SUPERIOR -->
+    <header class="absolute top-0 left-0 w-full h-[91px] pt-[62px] px-6 flex items-center justify-between pointer-events-none">
         
-        <!-- Contenedor real de la barra (91px de alto) -->
-        <div class="w-full h-[91px] pt-[62px] px-6 flex items-center justify-between">
+        <!-- Contenedor flex (atravesable para no dejar espacios muertos) -->
+        <div id="top-normal-content" class="flex items-center gap-6 w-full transition-opacity pointer-events-none">
+            <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight whitespace-nowrap pointer-events-auto">
+                Último Power
+            </h1>
             
-            <!-- CONTENIDO NORMAL DE CABECERA (Con pointer-events-auto para revivir los clics) -->
-            <div id="top-normal-content" class="flex items-center gap-6 w-full transition-opacity pointer-events-auto">
-                <h1 class="text-xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400 tracking-tight whitespace-nowrap">
-                    Último Power
-                </h1>
+            <!-- Menú Desplegable Estilo "Todas" -->
+            <div class="relative pointer-events-auto" id="dropdown-wrapper">
+                <button onclick="window.toggleDropdown(event)" class="px-4 py-1.5 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all shadow-md flex items-center gap-2 backdrop-blur-sm cursor-pointer">
+                    Opciones
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
                 
-                <!-- NUEVO: Menú Desplegable Estilo "Todas" -->
-                <div class="relative" id="dropdown-wrapper">
-                    <button onclick="window.toggleDropdown(event)" class="px-4 py-1.5 bg-slate-800/80 border border-slate-700 rounded-xl text-xs font-bold text-slate-300 hover:text-white transition-all shadow-md flex items-center gap-2 backdrop-blur-sm cursor-pointer">
-                        Opciones
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    
-                    <!-- Contenedor absoluto que cae sobre el chat. Ampliado a 480px -->
-                    <div id="dropdown-menu" class="absolute left-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_15px_50px_-10px_rgba(0,0,0,0.9)] hidden flex-col overflow-hidden pointer-events-auto">
-                        <div class="max-h-[480px] overflow-y-auto search-scroll">
-                            <button class="w-full text-left px-4 py-2.5 text-xs font-semibold text-white bg-blue-600/30 hover:bg-blue-600/50 border-b border-slate-800 transition-colors">Todas</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 1</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 2</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 3</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 4</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 5</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 6</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 7</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">Opción 8</button>
-                        </div>
+                <div id="dropdown-menu" class="absolute left-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_15px_50px_-10px_rgba(0,0,0,0.9)] hidden flex-col overflow-hidden">
+                    <div class="max-h-[480px] overflow-y-auto search-scroll">
+                        <button class="w-full text-left px-4 py-2.5 text-xs font-semibold text-white bg-blue-600/30 hover:bg-blue-600/50 border-b border-slate-800 transition-colors">Todas</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 1</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 2</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 3</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 4</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 5</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 6</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white transition-colors">Opción 7</button>
                     </div>
                 </div>
+            </div>
 
-                <!-- Pestañas de Navegación -->
-                <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm">
-                    <button onclick="window.switchRightView('smilies')" id="top-btn-smilies" class="px-5 py-1 bg-blue-600 border border-blue-500 rounded-lg text-xs font-bold text-white shadow-sm transition-all">
-                        Smilies
-                    </button>
-                    <button onclick="window.switchRightView('pawns')" id="top-btn-pawns" class="px-5 py-1 bg-transparent hover:bg-slate-800 border border-transparent rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all opacity-80">
-                        Pawns
-                    </button>
-                </div>
-
-                <!-- Paginación Panel Derecho -->
-                <div class="flex items-center gap-3 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm">
-                    <button onclick="window.prevPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
-                    </button>
-                    <span id="page-indicator" class="text-xs font-bold text-slate-300 font-mono w-10 text-center">1/1</span>
-                    <button onclick="window.nextPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
-                    </button>
-                </div>
-
-                <!-- Botón de Pruebas (Convertido en Menú Desplegable) -->
-                <div class="relative ml-2" id="dropdown-test-wrapper">
-                    <button onclick="window.toggleTestDropdown(event)" id="top-btn-test" class="px-3 py-1.5 bg-purple-600/20 border border-purple-500/50 rounded-lg text-xs font-bold text-purple-300 hover:text-white hover:bg-purple-500/40 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
-                        <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
-                        Pruebas
-                        <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
-                    </button>
-                    
-                    <!-- Contenedor absoluto. Ampliado a 480px -->
-                    <div id="dropdown-test-menu" class="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_15px_50px_-10px_rgba(0,0,0,0.9)] hidden flex-col overflow-hidden pointer-events-auto">
-                        <div class="max-h-[480px] overflow-y-auto search-scroll">
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 1</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 2</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 3</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 4</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 5</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 6</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 7</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 8</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 9</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 10</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 11</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 12</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 13</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 14</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 15</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 16</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 17</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 18</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 19</button>
-                            <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white transition-colors">Opción de prueba 20</button>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Botón Ocultar/Mostrar UI -->
-                <button onclick="window.toggleUI()" id="top-btn-toggle" class="px-3 py-1.5 ml-2 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
-                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
-                    Ocultar UI
+            <!-- Pestañas de Navegación -->
+            <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm pointer-events-auto">
+                <button onclick="window.switchRightView('smilies')" id="top-btn-smilies" class="px-5 py-1 bg-blue-600 border border-blue-500 rounded-lg text-xs font-bold text-white shadow-sm transition-all">
+                    Smilies
+                </button>
+                <button onclick="window.switchRightView('pawns')" id="top-btn-pawns" class="px-5 py-1 bg-transparent hover:bg-slate-800 border border-transparent rounded-lg text-xs font-bold text-slate-400 hover:text-white transition-all opacity-80">
+                    Pawns
                 </button>
             </div>
 
-            <!-- CONTENIDO BUSCADOR HORIZONTAL (Oculto por defecto, visible al tipear) -->
-            <div id="search-horizontal-results" class="hidden flex-1 items-center gap-3 overflow-hidden h-[30px] px-4 w-full pointer-events-auto">
-               <span class="text-xs text-slate-400 whitespace-nowrap font-semibold shrink-0">Resultados:</span>
-               <div id="search-results-container" class="flex items-center gap-2 flex-1 overflow-x-auto search-scroll h-full pb-1 pt-1">
-                   <!-- CHIPS DE RESULTADOS DINÁMICOS -->
-               </div>
+            <!-- Paginación Panel Derecho -->
+            <div class="flex items-center gap-3 bg-slate-900/80 px-3 py-1.5 rounded-xl border border-slate-700 shadow-md backdrop-blur-sm pointer-events-auto">
+                <button onclick="window.prevPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" /></svg>
+                </button>
+                <span id="page-indicator" class="text-xs font-bold text-slate-300 font-mono w-10 text-center">1/1</span>
+                <button onclick="window.nextPage()" class="text-slate-400 hover:text-white transition-colors cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" /></svg>
+                </button>
             </div>
 
-            <!-- BUSCADOR INPUT -->
-            <div class="relative w-72 shrink-0 h-[30px] ml-auto pointer-events-auto">
-                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                    </svg>
+            <!-- Botón de Pruebas (Convertido en Menú Desplegable) -->
+            <div class="relative ml-2 pointer-events-auto" id="dropdown-test-wrapper">
+                <button onclick="window.toggleTestDropdown(event)" id="top-btn-test" class="px-3 py-1.5 bg-purple-600/20 border border-purple-500/50 rounded-lg text-xs font-bold text-purple-300 hover:text-white hover:bg-purple-500/40 transition-all shadow-sm flex items-center gap-1.5 cursor-pointer">
+                    <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" /></svg>
+                    Pruebas
+                    <svg class="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+                
+                <div id="dropdown-test-menu" class="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_15px_50px_-10px_rgba(0,0,0,0.9)] hidden flex-col overflow-hidden">
+                    <div class="max-h-[480px] overflow-y-auto search-scroll">
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 1</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 2</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 3</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 4</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 5</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 6</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 7</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 8</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 9</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 10</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 11</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 12</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 13</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 14</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 15</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 16</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 17</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 18</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 19</button>
+                        <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white transition-colors">Opción de prueba 20</button>
+                    </div>
                 </div>
-                <input type="text" id="top-search" oninput="window.doTopSearch(this.value)" placeholder="Buscar códigos..." class="block w-full h-full pl-9 pr-3 py-1 border border-slate-700 rounded-lg leading-5 bg-slate-900/80 backdrop-blur-sm text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-800 focus:border-blue-500 transition-colors text-xs shadow-md">
             </div>
+
+            <!-- Botón Ocultar/Mostrar UI -->
+            <button onclick="window.toggleUI()" id="top-btn-toggle" class="px-3 py-1.5 ml-2 bg-slate-800 border border-slate-700 rounded-lg text-xs font-bold text-slate-300 hover:text-white transition-all shadow-sm flex items-center gap-1.5 cursor-pointer pointer-events-auto">
+                <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" /></svg>
+                Ocultar UI
+            </button>
+        </div>
+
+        <!-- CONTENIDO BUSCADOR HORIZONTAL (Oculto por defecto, visible al tipear) -->
+        <div id="search-horizontal-results" class="hidden flex-1 items-center gap-3 overflow-hidden h-[30px] px-4 w-full pointer-events-none">
+           <span class="text-xs text-slate-400 whitespace-nowrap font-semibold shrink-0 pointer-events-auto">Resultados:</span>
+           <div id="search-results-container" class="flex items-center gap-2 flex-1 overflow-x-auto search-scroll h-full pb-1 pt-1 pointer-events-auto">
+               <!-- CHIPS DE RESULTADOS DINÁMICOS -->
+           </div>
+        </div>
+
+        <!-- BUSCADOR INPUT -->
+        <div class="relative w-72 shrink-0 h-[30px] ml-auto pointer-events-auto">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-4 w-4 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+            <input type="text" id="top-search" oninput="window.doTopSearch(this.value)" placeholder="Buscar códigos..." class="block w-full h-full pl-9 pr-3 py-1 border border-slate-700 rounded-lg leading-5 bg-slate-900/80 backdrop-blur-sm text-slate-300 placeholder-slate-500 focus:outline-none focus:bg-slate-800 focus:border-blue-500 transition-colors text-xs shadow-md">
         </div>
     </header>
 
-    <!-- ÁREA PRINCIPAL XATFRAME (100% Bloqueada para clics) -->
-    <main class="absolute top-[91px] left-0 w-[1303px] h-[487px] pointer-events-none">
+    <!-- ÁREA PRINCIPAL -->
+    <main class="absolute top-[91px] left-0 w-full h-[487px] pointer-events-none">
 
-        <!-- PANEL IZQUIERDO (CUADRO 1: DETALLES) -->
-        <aside id="left-panel" class="absolute top-[30px] left-[40px] w-[229px] h-[408px] overflow-hidden pointer-events-none transition-opacity duration-300">
-            <!-- Escala CSS Exacta que ya mantenías: Ancho interno 380px escalado al 60.2% -> 229px -->
+        <!-- PANEL IZQUIERDO (pointer-events-auto para revivir interacción) -->
+        <aside id="left-panel" class="absolute top-[30px] left-[40px] w-[229px] h-[408px] overflow-hidden pointer-events-auto transition-opacity duration-300">
             <div style="width: 380px; transform: scale(0.602); transform-origin: top left; position: absolute; top: 0; left: 0;">
                 
                 <section id="section-details" class="bg-slate-900 rounded-2xl shadow-2xl border border-slate-800 overflow-hidden w-full">
@@ -276,7 +266,7 @@
             </div>
         </aside>
 
-        <!-- ZONA CENTRAL XAT (CUADRO 2: CHAT) -->
+        <!-- ZONA CENTRAL XAT (HOYO) -->
         <div class="absolute top-0 left-1/2 -translate-x-1/2 w-[726px] h-[487px] shrink-0 pointer-events-none">
             <!-- Esqueleto de Carga -->
             <div id="loading" class="absolute inset-0 flex flex-col items-center justify-center -translate-y-12 animate-pulse-slow">
@@ -295,8 +285,8 @@
             </div>
         </div>
 
-        <!-- PANEL DERECHO (CUADRO 3: SMILIES/PAWNS) -->
-        <aside id="right-panel" class="absolute top-[30px] right-[0px] w-[272px] h-[473px] overflow-hidden pointer-events-none transition-opacity duration-300">
+        <!-- PANEL DERECHO (pointer-events-auto para revivir interacción) -->
+        <aside id="right-panel" class="absolute top-[30px] right-[0px] w-[272px] h-[473px] overflow-hidden pointer-events-auto transition-opacity duration-300">
             
             <div id="content" class="hidden w-full h-full" style="width: 340px; transform: scale(0.8); transform-origin: top left; position: absolute; top: 0; left: 0;">
                 
