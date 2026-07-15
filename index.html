@@ -88,8 +88,8 @@
   <!-- CONTENEDOR MAESTRO ABSOLUTO PIXEL-PERFECT (1303px de área total interactiva) -->
   <div class="relative w-[1303px] h-[608px]">
 
-    <!-- CONTROLADOR SUPERIOR (ÚNICA ZONA INTERACTIVA - pt-[62px] por banner xat) -->
-    <header class="absolute top-0 left-0 w-[1303px] h-[91px] pt-[62px] flex items-center justify-between px-6 pointer-events-auto z-50">
+    <!-- CONTROLADOR SUPERIOR (ÚNICA ZONA INTERACTIVA - pt-[62px] por banner xat). Z-index exageradamente alto para ganarle al chat -->
+    <header class="absolute top-0 left-0 w-[1303px] h-[91px] pt-[62px] flex items-center justify-between px-6 pointer-events-auto z-[999999]">
         
         <!-- CONTENIDO NORMAL DE CABECERA -->
         <div id="top-normal-content" class="flex items-center gap-6 w-full transition-opacity">
@@ -104,8 +104,8 @@
                     <svg class="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" /></svg>
                 </button>
                 
-                <!-- Contenedor absoluto que cae sobre el chat -->
-                <div id="dropdown-menu" class="absolute left-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-[100] hidden flex-col overflow-hidden">
+                <!-- Contenedor absoluto que cae sobre el chat. Z-index maximo -->
+                <div id="dropdown-menu" class="absolute left-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-[999999] hidden flex-col overflow-hidden">
                     <div class="max-h-[250px] overflow-y-auto search-scroll">
                         <button class="w-full text-left px-4 py-2.5 text-xs font-semibold text-white bg-blue-600/30 hover:bg-blue-600/50 border-b border-slate-800 transition-colors">Todas</button>
                         <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-slate-800 hover:text-white border-b border-slate-800 transition-colors">Opción 1</button>
@@ -149,7 +149,7 @@
                 </button>
                 
                 <!-- Contenedor absoluto (right-0 para que caiga hacia la izquierda y no se salga de la pantalla) -->
-                <div id="dropdown-test-menu" class="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-[100] hidden flex-col overflow-hidden">
+                <div id="dropdown-test-menu" class="absolute right-0 mt-2 w-48 bg-slate-900 border border-slate-700 rounded-xl shadow-[0_10px_40px_-10px_rgba(0,0,0,0.8)] z-[999999] hidden flex-col overflow-hidden">
                     <div class="max-h-[250px] overflow-y-auto search-scroll">
                         <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 1</button>
                         <button class="w-full text-left px-4 py-2.5 text-xs text-slate-300 hover:bg-purple-900/50 hover:text-white border-b border-slate-800 transition-colors">Opción de prueba 2</button>
