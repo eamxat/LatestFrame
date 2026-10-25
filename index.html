@@ -6,7 +6,7 @@
   <title>New Power xatFrame</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
-    /* NEW UPDATE - BY EAM96 */
+    /* Aplica la apariencia guardada antes del primer render (evita parpadeo) */
     try {
       var _a = JSON.parse(localStorage.getItem('xatframe-appearance') || 'null');
       if (_a) {
@@ -451,13 +451,15 @@
         background: var(--deep);
         box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.35);
     }
-    #smileys-grid .copyable-code {
+    #smileys-grid .copyable-code,
+    #pawns-grid .copyable-code {
         background: linear-gradient(180deg, var(--btn-navy-top), var(--btn-navy-bot));
         border-color: var(--btn-navy-line);
         color: var(--txt-input);
         box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
     }
-    #smileys-grid > div:hover .copyable-code {
+    #smileys-grid > div:hover .copyable-code,
+    #pawns-grid > div:hover .copyable-code {
         background: linear-gradient(180deg, var(--btn-gold-top), var(--btn-gold-bot));
         border-color: #f3c63a;
         color: var(--btn-gold-ink);
