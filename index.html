@@ -425,12 +425,21 @@
     #section-details h2 img { filter: var(--icon-glow); }
     #section-smilies h2 img {
         filter: brightness(0) invert(1);
-        opacity: 0.88;
+        opacity: 0.5;
     }
     /* En tema claro el icono de Smilies pasa a negro */
     html[data-theme="light"] #section-smilies h2 img {
         filter: brightness(0);
-        opacity: 0.88;
+        opacity: 0.5;
+    }
+    /* Pawns: conserva su color en tema oscuro (50% de opacidad) */
+    #section-pawns h2 img {
+        opacity: 0.5;
+    }
+    /* En tema claro el icono de Pawns también pasa a negro */
+    html[data-theme="light"] #section-pawns h2 img {
+        filter: brightness(0);
+        opacity: 0.5;
     }
 
     /* Tarjetas de smilies */
