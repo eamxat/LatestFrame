@@ -229,6 +229,13 @@
     #top-btn-smilies, #top-btn-pawns {
         border-radius: 9px;
         font-weight: 600;
+        height: 24px;
+        padding-top: 0;
+        padding-bottom: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
     }
     #top-btn-smilies.bg-blue-600 {
         background: linear-gradient(180deg, #f6d65a, #d8a81f);
@@ -269,8 +276,8 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        width: 24px;
-        height: 24px;
+        width: 22px;
+        height: 22px;
         border-radius: 7px;
         background: linear-gradient(180deg, var(--btn-navy-top), var(--btn-navy-bot));
         border: 1px solid var(--btn-navy-line);
@@ -285,6 +292,10 @@
 
     /* --- Ocultar/Mostrar (secundario -> dorado al activarse) --- */
     #top-btn-toggle {
+        height: 29px;
+        padding-top: 0;
+        padding-bottom: 0;
+        box-sizing: border-box;
         border-radius: 8px;
         font-weight: 600;
         background: var(--btn-slate-bg);
@@ -306,6 +317,10 @@
 
     /* --- Idioma y Apariencia (chips navy) --- */
     #top-btn-lang, #top-btn-appearance {
+        height: 29px;
+        padding-top: 0;
+        padding-bottom: 0;
+        box-sizing: border-box;
         border-radius: 8px;
         font-weight: 600;
         background: linear-gradient(180deg, var(--btn-navy-top), var(--btn-navy-bot));
@@ -356,6 +371,10 @@
        SUPERFICIES GLASS (la opacidad se controla con --g)
        ===================================================================== */
     header .bg-slate-900\/80 {
+        height: 30px;
+        padding-top: 0;
+        padding-bottom: 0;
+        box-sizing: border-box;
         background: linear-gradient(180deg, rgba(var(--hd-top), calc(0.92 * var(--g))), rgba(var(--hd-bot), calc(0.92 * var(--g))));
         border-color: var(--pnl-line);
         box-shadow: var(--shadow-bar);
@@ -756,7 +775,7 @@
                                                     <img id="t-img" alt="Main Power" class="sprite-image hidden">
                                                 </div>
                                             </div>
-                                            <img src="https://raw.githubusercontent.com/eamxat/Images/cbdc25a3781998d3c1a442304a77968cc264ad4f/Newicon.svg" alt="New icon" class="h-10 w-10 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
+                                            <img src="https://raw.githubusercontent.com/eamxat/Images/cbdc25a3781998d3c1a442304a77968cc264ad4f/Newicon.svg" alt="New icon" class="h-16 w-16 object-contain drop-shadow-[0_0_8px_rgba(255,255,255,0.1)]">
                                         </div>
                                     </td>
                                 </tr>
